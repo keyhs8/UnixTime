@@ -10,12 +10,15 @@ package com.ripplex.unixtime;
 public class UnixTime {
 
     private int unixTime;
+    private int year;
+    private int month;
+    private int day;
 
     public static final int SEC_MINUTE = 60;
     public static final int SEC_HOUR = SEC_MINUTE * 60;
     public static final int SEC_DAY = SEC_HOUR * 24;
     public static final int SEC_YEAR = SEC_DAY * 365;
-    public static final int SEC_YEAR_LEAP = SEC_YEAR + SEC_DAY;
+    public static final long SEC_YEAR_FOUR = SEC_YEAR * 4 + SEC_DAY;
 
     /**
      * Default constructor
@@ -23,6 +26,9 @@ public class UnixTime {
     public UnixTime() {
 
         this.unixTime = 0;
+        this.year = 1970;
+        this.month = 0;
+        this.day = 0;
     }
 
     /**
@@ -43,6 +49,12 @@ public class UnixTime {
      */
     public void setUnixTime(int utime) {
 
+        long l_utime_offset = utime + SEC_YEAR * 2;     // 閏年計算のため２年分オフセット
+
+        this.year += (l_utime_offset / SEC_YEAR_FOUR) * 4;
+        this.year += (l_utime_offset % SEC_YEAR_FOUR) / SEC_YEAR;
+        this.year -= 2;                                 // オフセットを戻す
+
         this.unixTime = utime;
     }
 
@@ -61,9 +73,7 @@ public class UnixTime {
      *
      * @return Year number
      */
-    public int getYear() {
-        return 0;
-    }
+    public int getYear() { return this.year; }
 
     /**
      * Return month number of UNIX Time
@@ -71,7 +81,7 @@ public class UnixTime {
      * @return Month number
      */
     public int getMonth() {
-        return 0;
+        return this.month;
     }
 
     /**
@@ -80,16 +90,6 @@ public class UnixTime {
      * @return Day number
      */
     public int getDay() {
-        return 0;
-    }
-
-    /**
-     * Return day count of February.
-     *
-     *
-     * @return Day count of February
-     */
-    protected int getDayCountOfFebruary() {
-        return 28;
+        return this.day;
     }
 }
