@@ -38,8 +38,7 @@ public class UnixTime {
         this.year = 1900;
         this.month = 1;
         this.day = 1;
-        this.isLeapYear = 0;
-        this.daysOfMonth = new int[]{31, 28 + this.isLeapYear, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        this.daysOfMonth = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
         // <単位年, 含まれる閏日数>
         this.dic_year = new LinkedHashMap<>();
@@ -68,6 +67,9 @@ public class UnixTime {
         this.unixTime = utime;
 
         // 閏年計算のため70年分（1970→1900）オフセット（閏年17回）
+        int uday = utime / SEC_DAY;
+        int utime_remain = utime % SEC_DAY;
+        int uday_offset = uday + 70 * DAYS_OF_YEAR + 17;
         long utime_offset = (long)utime + (70 * DAYS_OF_YEAR + 17) * (long)SEC_DAY;
         long d_sec = 0;
 
@@ -90,16 +92,18 @@ public class UnixTime {
         }
 
         // 閏年判定
-        this.isLeapYear = (this.year % 4 == 0 && (this.year % 100 != 0 || this.year % 400 == 0)) ? 1 : 0;
+        if (this.year % 4 == 0 && (this.year % 100 != 0 || this.year % 400 == 0)) {
+            this.daysOfMonth[1] = 29;
+        }
 
         // 月計算
         for (int i = 1; (utime_offset / (d_sec = this.daysOfMonth[i - 1] * SEC_DAY)) > 0; i++) {
             utime_offset -= d_sec;
-            this.month = i + 1;
+            this.month++;
         }
 
         // 日計算
-        this.day = (int)(utime_offset / SEC_DAY);
+        this.day = (int)(utime_offset / SEC_DAY) + 1;
     }
 
     /**
