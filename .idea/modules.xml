@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UnixTimeProject.iml" filepath="$PROJECT_DIR$/UnixTimeProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UnixTime.iml" filepath="$PROJECT_DIR$/UnixTime.iml" />
     </modules>
   </component>
 </project>
