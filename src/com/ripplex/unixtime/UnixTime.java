@@ -1,10 +1,6 @@
 package com.ripplex.unixtime;
 
 import java.util.Map;
-<<<<<<< HEAD
-import java.util.Iterator;
-=======
->>>>>>> develop
 import java.util.LinkedHashMap;
 
 /**
@@ -20,25 +16,17 @@ public class UnixTime {
     private int year;
     private int month;
     private int day;
-<<<<<<< HEAD
-    private LinkedHashMap<Integer, Long> dic_year;
-=======
     private int[] daysOfMonth;
     private LinkedHashMap<Integer, Integer> dicYears;
->>>>>>> develop
 
     public static final int SEC_MINUTE = 60;
     public static final int SEC_HOUR = SEC_MINUTE * 60;
     public static final int SEC_DAY = SEC_HOUR * 24;
-<<<<<<< HEAD
-    public static final long SEC_YEAR = SEC_DAY * 365;
-=======
     public static final int DAYS_OF_YEAR = 365;
     public static final boolean DEBUG_MODE = false;
 
     private static final int yearsOffset = 369;
     private static final int[] dicOneYear = {DAYS_OF_YEAR, DAYS_OF_YEAR, DAYS_OF_YEAR, DAYS_OF_YEAR + 1};
->>>>>>> develop
 
     /**
      * Default constructor
@@ -46,21 +34,6 @@ public class UnixTime {
     public UnixTime() {
 
         this.unixTime = 0;
-<<<<<<< HEAD
-        this.year = 1900;
-        this.month = 0;
-        this.day = 0;
-
-        long sec_y_four = SEC_YEAR * 4 + SEC_DAY;                               // 4年目は閏年
-        long sec_y_one_hundred = sec_y_four * 24 + SEC_YEAR;                    // 100年目は閏年ではない
-        long sec_y_four_handred = sec_y_one_hundred * 3 + SEC_YEAR + SEC_DAY;   // 400年目は閏年
-
-        this.dic_year = new LinkedHashMap<>();
-        this.dic_year.put(400, sec_y_four_handred);
-        this.dic_year.put(100, sec_y_one_hundred);
-        this.dic_year.put(4, sec_y_four);
-        this.dic_year.put(1, SEC_YEAR);
-=======
         this.year = 1970 - yearsOffset;
         this.month = 1;
         this.day = 1;
@@ -72,7 +45,6 @@ public class UnixTime {
         this.dicYears.put(100, 100 * DAYS_OF_YEAR + 24);
         this.dicYears.put(4, 4 * DAYS_OF_YEAR + 1);
         // this.dicYears.put(1, DAYS_OF_YEAR);
->>>>>>> develop
     }
 
     /**
@@ -91,42 +63,6 @@ public class UnixTime {
      * @param utime UNIX Time
      */
     public void setUnixTime(int utime) {
-<<<<<<< HEAD
-
-        // 閏年計算のため70年分（1970→1900）オフセット（閏年17回）
-        long utime_offset = (long)utime + (SEC_YEAR * 70 + SEC_DAY * 17);
-
-        Iterator<Map.Entry<Integer, Long>> iter = this.dic_year.entrySet().iterator();
-        Map.Entry<Integer, Long> entry = null;
-        if (iter.hasNext()) {
-            entry = iter.next();
-        }
-        while (iter.hasNext()) {
-            int e_year = entry.getKey();
-            long e_sec = entry.getValue();
-            entry = iter.next();
-            int n_year = entry.getKey();;
-            long n_sec = entry.getValue();
-
-            // 商部分の年数計算
-            this.year += (utime_offset / e_sec) * e_year;
-
-            // 余り部分の年数計算
-            this.year += ((utime_offset % e_sec) / n_sec) * n_year;
-
-            // 計算分を減算
-            utime_offset %= n_sec;
-
-            System.out.println(String.valueOf(n_year)
-                    + "年計算 : " + String.valueOf(this.year) + "年 "
-                    + String.valueOf(utime_offset / (double)SEC_DAY) + "日");
-        }
-
-        // オフセットを戻す
-        //this.year -= 30;
-
-=======
->>>>>>> develop
         this.unixTime = utime;
 
         // 閏年計算のため369年分（1970→1601）+ 閏日(89日）オフセット
@@ -204,23 +140,13 @@ public class UnixTime {
      *
      * @return Month number
      */
-<<<<<<< HEAD
-    public int getMonth() {
-        return this.month;
-    }
-=======
     public int getMonth() { return this.month; }
->>>>>>> develop
 
     /**
      * Return day number of UNIX Time
      *
      * @return Day number
      */
-<<<<<<< HEAD
-    public int getDay() {
-        return this.day;
-=======
     public int getDay() { return this.day; }
 
     /**
@@ -230,6 +156,5 @@ public class UnixTime {
      */
     private void printDebug(String msg) {
         if (DEBUG_MODE) System.out.print(msg);
->>>>>>> develop
     }
 }
