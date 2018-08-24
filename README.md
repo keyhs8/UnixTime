@@ -1,6 +1,6 @@
 # UnixTimeProject
 
-[![CircleCI](https://circleci.com/gh/keyhs8/UnixTime.svg?style=shield)](https://circleci.com/gh/keyhs8/UnixTime) [![Coverage Status](https://coveralls.io/repos/github/keyhs8/UnixTime/badge.svg?branch=develop)](https://coveralls.io/github/keyhs8/UnixTime?branch=develop)
+[![CircleCI](https://circleci.com/gh/keyhs8/UnixTime.svg?style=shield)](https://circleci.com/gh/keyhs8/UnixTime) [![Coverage Status](https://coveralls.io/repos/github/keyhs8/UnixTime/badge.svg)](https://coveralls.io/github/keyhs8/UnixTime)
 
 ## This is ...
 Java sample code + Spock test code
