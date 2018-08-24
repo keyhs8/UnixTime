@@ -84,4 +84,23 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+### https://raw.github.com/github/gitignore/cb0a95c36f7c1fcb3f2ed2f2bcd5f78403b3caa4/Gradle.gitignore
+
+.gradle
+/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+bin/
+
 
