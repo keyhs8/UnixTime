@@ -17,16 +17,16 @@ public class UnixTime {
     private int month;
     private int day;
     private int[] daysOfMonth;
-
-    private LinkedHashMap<Integer, int[]> dic_year;
+    private LinkedHashMap<Integer, Integer> dicYears;
 
     public static final int SEC_MINUTE = 60;
     public static final int SEC_HOUR = SEC_MINUTE * 60;
     public static final int SEC_DAY = SEC_HOUR * 24;
     public static final int DAYS_OF_YEAR = 365;
-    public static final int YEARS_OFFSET = 369;
-
     public static final boolean DEBUG_MODE = false;
+
+    private static final int yearsOffset = 369;
+    private static final int[] dicOneYear = {DAYS_OF_YEAR, DAYS_OF_YEAR, DAYS_OF_YEAR, DAYS_OF_YEAR + 1};
 
     /**
      * Default constructor
@@ -34,17 +34,17 @@ public class UnixTime {
     public UnixTime() {
 
         this.unixTime = 0;
-        this.year = 1970 - YEARS_OFFSET;
+        this.year = 1970 - yearsOffset;
         this.month = 1;
         this.day = 1;
         this.daysOfMonth = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-        // <単位年, {含まれる日数, カウント}>
-        this.dic_year = new LinkedHashMap<>();
-        this.dic_year.put(400, new int[]{400 * DAYS_OF_YEAR + 97, 0});
-        this.dic_year.put(100, new int[]{100 * DAYS_OF_YEAR + 24, 0});
-        this.dic_year.put(4, new int[]{4 * DAYS_OF_YEAR + 1, 0});
-        this.dic_year.put(1, new int[]{DAYS_OF_YEAR, 0});
+        // <単位年, 年単位に含まれる日数>
+        this.dicYears = new LinkedHashMap<>();
+        this.dicYears.put(400, 400 * DAYS_OF_YEAR + 97);
+        this.dicYears.put(100, 100 * DAYS_OF_YEAR + 24);
+        this.dicYears.put(4, 4 * DAYS_OF_YEAR + 1);
+        // this.dicYears.put(1, DAYS_OF_YEAR);
     }
 
     /**
@@ -66,29 +66,42 @@ public class UnixTime {
         this.unixTime = utime;
 
         // 閏年計算のため369年分（1970→1601）+ 閏日(89日）オフセット
-        long utime_offset = (long)utime + (YEARS_OFFSET * DAYS_OF_YEAR + 89) * (long)SEC_DAY;
-        long d_sec;
+        long utime_offset = (long)utime + (yearsOffset * DAYS_OF_YEAR + 89) * (long)SEC_DAY;
+        long d_sec, d_year;
 
-        // 年計算
-        for (Map.Entry<Integer, int[]> entry: this.dic_year.entrySet()) {
+        // 単位年計算
+        for (Map.Entry<Integer, Integer> entry: this.dicYears.entrySet()) {
             int e_year = entry.getKey();
-            int[] e_value = entry.getValue();
-            d_sec = (e_value[0]) * (long)SEC_DAY;
+            int e_value = entry.getValue();
+            d_sec = (e_value) * (long)SEC_DAY;
 
             // 商部分の年数計算
-            e_value[1] = (int)(utime_offset / d_sec);
-
-            // 閏年12/31例外補正
-            if (e_year == 1 && e_value[1] == 4) e_value[1] = 3;
+            d_year = (int)(utime_offset / d_sec);
 
             // 年数加算
-            this.year += e_value[1] * e_year;
+            this.year += d_year * e_year;
 
             // 計算分を減算
-            utime_offset -= d_sec * e_value[1];
+            utime_offset -= d_sec * d_year;
 
             // デバッグプリント
-            printDebug(String.valueOf(e_year) + "年計算(" + String.valueOf(e_value[1]) + "回) / ");
+            printDebug(String.valueOf(e_year) + "年計算(" + String.valueOf(d_year) + "回) / ");
+        }
+
+        // 1年単位計算
+        for (int i = 0; i < dicOneYear.length; i++) {
+            d_sec = dicOneYear[i] * (long)SEC_DAY;
+            d_year = (int)(utime_offset / d_sec);
+
+            if (d_year > 0) {
+                this.year++;
+                utime_offset -= d_sec;
+            }
+            else {
+                // デバッグプリント
+                printDebug("1年計算(" + String.valueOf(i + 1) + "回) / ");
+                break;
+            }
         }
 
         // 閏年判定
